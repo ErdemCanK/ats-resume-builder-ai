@@ -11,7 +11,7 @@ import { dark } from "@clerk/themes";
 export default function Navbar() {
     const {theme} = useTheme();
     return <header className="shadow-sm">
-        <div className="max-w-8xl mx-auto p-3 flex items-center justify-between gap-3">
+        <div className="max-w-7xl mx-auto p-3 flex items-center justify-between gap-3">
             <Link href="/resumes" className="flex items-center gap-2">
                 <Image src={logo} alt="logo" width={35} height={35} className="rounded-full" />
                 <span className="text-xl font-bold tracking-tight">AI Powered ATS Resume Builder</span>
