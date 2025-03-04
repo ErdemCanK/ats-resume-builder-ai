@@ -95,10 +95,10 @@ function EducationItem({ form, index, remove }: EducationItemProps) {
       </div>
       <FormField
         control={form.control}
-        name={`educations.${index}.school`}
+        name={`educations.${index}.degree`}
         render={({ field }) => (
           <FormItem>
-            <FormLabel>School</FormLabel>
+            <FormLabel>Degree</FormLabel>
             <FormControl>
               <Input {...field} />
             </FormControl>
@@ -108,10 +108,10 @@ function EducationItem({ form, index, remove }: EducationItemProps) {
       />
       <FormField
         control={form.control}
-        name={`educations.${index}.degree`}
+        name={`educations.${index}.school`}
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Degree</FormLabel>
+            <FormLabel>School</FormLabel>
             <FormControl>
               <Input {...field} />
             </FormControl>

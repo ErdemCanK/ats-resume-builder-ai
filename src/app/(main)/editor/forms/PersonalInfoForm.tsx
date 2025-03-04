@@ -9,9 +9,13 @@ import {
   FormControl,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { useEffect, useRef, useState } from "react";
 import { EditorFormProps } from "@/lib/types";
+import { UploadIcon, TrashIcon } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import Image from "next/image";
+import { BorderStyles } from "@/app/(main)/editor/BorderStyleButton";
 export default function PersonalInfoForm({
   resumeData,
   setResumeData,
@@ -29,14 +33,32 @@ export default function PersonalInfoForm({
     },
   });
 
+  const [previewUrl, setPreviewUrl] = useState<string | null>(
+    resumeData.photo instanceof File
+      ? URL.createObjectURL(resumeData.photo)
+      : null,
+  );
+
+  useEffect(() => {
+    if (resumeData.photo instanceof File) {
+      setPreviewUrl(URL.createObjectURL(resumeData.photo));
+    } else if (typeof resumeData.photo === "string") {
+      setPreviewUrl(resumeData.photo);
+    } else {
+      setPreviewUrl(null);
+    }
+  }, [resumeData.photo]);
+
   useEffect(() => {
     const { unsubscribe } = form.watch(async (values) => {
       const isValid = await form.trigger();
       if (!isValid) return;
-      setResumeData({ ...resumeData, ...values });
+      setResumeData({ ...resumeData, ...values, photo: resumeData.photo });
     });
     return unsubscribe;
-  }, [form, resumeData, setResumeData]);
+  }, [form, resumeData, setResumeData, previewUrl]);
+
+  const photoInputRef = useRef<HTMLInputElement>(null);
 
   return (
     <div className="mx-auto max-w-xl space-x-6">
@@ -49,20 +71,97 @@ export default function PersonalInfoForm({
           <FormField
             control={form.control}
             name="photo"
-            render={({ field: { value, ...fieldValues } }) => (
+            render={({ field }) => (
               <FormItem>
                 <FormLabel>Your Photo</FormLabel>
-                <FormControl>
-                  <Input
-                    {...fieldValues}
+                <div className="flex items-center gap-4">
+                  <input
                     type="file"
                     accept="image/*"
+                    className="hidden"
+                    ref={photoInputRef}
                     onChange={(e) => {
                       const file = e.target.files?.[0];
-                      fieldValues.onChange(file);
+                      if (file) {
+                        const imageUrl = URL.createObjectURL(file);
+                        field.onChange(file);
+                        setPreviewUrl(imageUrl);
+                        setResumeData({ ...resumeData, photo: imageUrl });
+                      } else {
+                        field.onChange(null);
+                        setPreviewUrl(null);
+                        setResumeData({ ...resumeData, photo: null });
+                      }
                     }}
                   />
-                </FormControl>
+                  <div className="flex flex-col items-center space-y-3">
+                    {/* 📸 Preview Image */}
+                    {previewUrl ? (
+                      <div className="relative h-[100px] w-[100px]">
+                        <Image
+                          src={previewUrl}
+                          alt="Photo"
+                          width={100}
+                          height={100}
+                          className="rounded-lg border object-cover shadow-md transition-all duration-300 ease-in-out hover:shadow-lg"
+                          style={{
+                            borderRadius:
+                              resumeData.borderStyle === BorderStyles.SQUARE
+                                ? "0px"
+                                : resumeData.borderStyle === BorderStyles.CIRCLE
+                                  ? "999px"
+                                  : "10%",
+                          }}
+                        />
+                      </div>
+                    ) : (
+                      <Button
+                        variant="outline"
+                        type="button"
+                        className="flex w-full items-center justify-center gap-2 rounded-lg px-4 py-2 shadow-sm transition hover:bg-gray-100"
+                        onClick={() => photoInputRef.current?.click()}
+                      >
+                        <UploadIcon className="size-4" />
+                        Upload Photo
+                      </Button>
+                    )}
+
+                    {/* 📂 Hidden File Input */}
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      ref={photoInputRef}
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          const imageUrl = URL.createObjectURL(file);
+                          setPreviewUrl(imageUrl);
+                          setResumeData({ ...resumeData, photo: file });
+                        }
+                      }}
+                    />
+
+                    {/* 🗑️ If Photo Exists, Remove Button */}
+                    {previewUrl && (
+                      <Button
+                        variant="destructive"
+                        type="button"
+                        className="flex items-center gap-2 rounded-lg px-4 py-2 shadow-sm transition hover:bg-red-600 focus:ring-2 focus:ring-red-500"
+                        onClick={() => {
+                          setPreviewUrl(null);
+                          setResumeData({ ...resumeData, photo: undefined });
+                          if (photoInputRef.current) {
+                            photoInputRef.current.value = "";
+                          }
+                        }}
+                      >
+                        <TrashIcon className="size-4" />
+                        Remove
+                      </Button>
+                    )}
+                  </div>
+                </div>
                 <FormMessage />
               </FormItem>
             )}
