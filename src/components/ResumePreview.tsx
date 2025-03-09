@@ -85,7 +85,7 @@ function PersonalInfoHeader({ resumeData }: ResumeSectionProps) {
           }}
         />
       )}
-      <div className="space-x-2.5">
+      <div className="space-y-2.5">
         <div className="space-y-1">
           <p className="text-lg font-bold" style={{ color: colorHex }}>
             {firstName} {lastName}
