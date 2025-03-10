@@ -22,6 +22,7 @@ import { closestCenter } from "@dnd-kit/core";
 import { restrictToParentElement } from "@dnd-kit/modifiers";
 import { CSS } from "@dnd-kit/utilities";
 import { cn } from "@/lib/utils";
+import GenerateWorkExperienceButton from "./GenerateWorkExperienceButton";
 export default function WorkExperienceForm({
   resumeData,
   setResumeData,
@@ -232,9 +233,15 @@ function WorkExperienceItem({ id, form, index, remove }: WorkExperienceItemProps
           </FormItem>
         )}
       />
+      <div className="flex justify-between">
+        <GenerateWorkExperienceButton onWorkExperienceGenerated={(exp) => 
+        form.setValue(`workExperiences.${index}`, exp)  
+        }/>
       <Button type="button" variant="destructive" onClick={() => remove(index)}>
         Remove
       </Button>
+      </div>
+      
     </div>
   );
 }

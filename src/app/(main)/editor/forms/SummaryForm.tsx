@@ -12,6 +12,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
+import GenerateSummaryButton from "./GenerateSummaryButton";
+
 export default function SummaryForm({resumeData, setResumeData}: EditorFormProps) {
     const form = useForm<SummaryValues>({
         resolver: zodResolver(summarySchema),
@@ -53,6 +55,10 @@ export default function SummaryForm({resumeData, setResumeData}: EditorFormProps
                                     />
                                 </FormControl>
                                 <FormMessage />
+                                <GenerateSummaryButton
+                                resumeData={resumeData}
+                                onSummaryGenerated={summary => form.setValue("summary", summary)}
+                                />
                             </FormItem>
                         )}
                     />

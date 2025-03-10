@@ -1,7 +1,7 @@
 import { ResumeValues } from "@/lib/validation";
 import { cn } from "@/lib/utils";
 import { useRef, useState, useEffect } from "react";
-import useDimensions from "./hooks/useDimensions";
+import useDimensions from "../hooks/useDimensions";
 import Image from "next/image";
 import { formatDate } from "date-fns";
 import { Badge } from "./ui/badge";

@@ -1,17 +1,19 @@
-import { steps } from "./steps";
 import {
   Breadcrumb,
-  BreadcrumbList,
   BreadcrumbItem,
   BreadcrumbLink,
+  BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { steps } from "./steps";
 import React from "react";
+
 interface BreadcrumbsProps {
   currentStep: string;
   setCurrentStep: (step: string) => void;
 }
+
 export default function Breadcrumbs({
   currentStep,
   setCurrentStep,
@@ -28,12 +30,13 @@ export default function Breadcrumbs({
                     {step.title}
                   </BreadcrumbPage>
                 ) : (
-                  <BreadcrumbLink
-                    href={`?step=${step.key}`}
-                    onClick={() => setCurrentStep(step.key)}
-                    className="relative pb-1 text-muted-foreground after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:origin-left after:scale-x-0 after:bg-muted-foreground after:transition-transform after:duration-300 hover:after:scale-x-100"
-                  >
-                    {step.title}
+                  <BreadcrumbLink asChild>
+                    <button
+                      onClick={() => setCurrentStep(step.key)}
+                      className="relative pb-1 text-muted-foreground after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:origin-left after:scale-x-0 after:bg-muted-foreground after:transition-transform after:duration-300 hover:after:scale-x-100"
+                    >
+                      {step.title}
+                    </button>
                   </BreadcrumbLink>
                 )}
               </BreadcrumbItem>

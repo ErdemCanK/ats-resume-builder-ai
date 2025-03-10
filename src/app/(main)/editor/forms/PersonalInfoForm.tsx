@@ -97,7 +97,7 @@ export default function PersonalInfoForm({
                   <div className="flex flex-col items-center space-y-3">
                     {/* 📸 Preview Image */}
                     {previewUrl ? (
-                      <div className="relative h-[100px] w-[100px]">
+                      <div className="group relative h-[100px] w-[100px]">
                         <Image
                           src={previewUrl}
                           alt="Photo"
@@ -113,16 +113,37 @@ export default function PersonalInfoForm({
                                   : "10%",
                           }}
                         />
+
+                        {/* on hover change photo button just for big screens */}
+                        <button
+                          type="button"
+                          className="pointer-events-auto absolute inset-0 flex h-full w-full cursor-pointer items-center justify-center rounded-lg bg-black/50 text-white opacity-0 transition-opacity duration-200 ease-in-out group-hover:opacity-100 sm:opacity-0 sm:hover:opacity-100"
+                          onClick={() => photoInputRef.current?.click()}
+                        >
+                          Change Photo
+                        </button>
                       </div>
                     ) : (
                       <Button
                         variant="outline"
                         type="button"
-                        className="flex w-full items-center justify-center gap-2 rounded-lg px-4 py-2 shadow-sm transition hover:bg-gray-100"
+                        className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg px-4 py-2 shadow-sm transition hover:bg-gray-100"
                         onClick={() => photoInputRef.current?.click()}
                       >
                         <UploadIcon className="size-4" />
                         Upload Photo
+                      </Button>
+                    )}
+
+                    {/* for small screens */}
+                    {previewUrl && (
+                      <Button
+                        variant="outline"
+                        type="button"
+                        className="mt-2 cursor-pointer sm:hidden"
+                        onClick={() => photoInputRef.current?.click()}
+                      >
+                        Change Photo
                       </Button>
                     )}
 
@@ -153,6 +174,7 @@ export default function PersonalInfoForm({
                           setResumeData({ ...resumeData, photo: undefined });
                           if (photoInputRef.current) {
                             photoInputRef.current.value = "";
+                            setResumeData({ ...resumeData, photo: null });
                           }
                         }}
                       >
